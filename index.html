@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofí Nails - El cuidado de tus uñas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-hand-sparkles"></i>
+                    <span class="logo-text">SOFÍ NAILS</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                    <li><a href="#servicios" class="nav-link">Servicios</a></li>
+                    <li><a href="#agendar" class="nav-link">Agendar</a></li>
+                    <li><a href="#recompensas" class="nav-link">Recompensas</a></li>
+                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn-account" onclick="openModal('loginModal')" id="accountButton">
+                        <div class="btn-account-content">
+                            <div class="btn-account-icon">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="btn-account-text">
+                                <span class="btn-account-label">Mi Cuenta</span>
+                                <span class="btn-account-status" id="accountStatus">Iniciar Sesión</span>
+                            </div>
+                        </div>
+                        <div class="btn-account-notification" id="accountNotification" style="display: none;">
+                            <span class="notification-dot"></span>
+                        </div>
+                    </button>
+                </div>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>SOFÍ NAILS</h1>
+                <p class="tagline">El cuidado de tus uñas</p>
+                <p class="hero-description">
+                    Descubre la belleza en cada detalle. Ofrecemos servicios profesionales de manicura, 
+                    pedicura y nail art con los mejores productos y técnicas del mercado.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#agendar" class="btn btn-primary">
+                        <i class="fas fa-calendar-plus"></i>
+                        Agendar Cita
+                    </a>
+                    <a href="#servicios" class="btn btn-secondary">
+                        <i class="fas fa-sparkles"></i>
+                        Ver Servicios
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <i class="fas fa-hand-sparkles hero-icon"></i>
+                    <h3>Profesional</h3>
+                    <p>Técnicas especializadas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios Section -->
+    <section id="servicios" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nuestros Servicios</h2>
+                <p>Tratamientos profesionales para el cuidado de tus uñas</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" data-service="manicura-clasica">
+                    <div class="service-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <h3>Manicura Clásica</h3>
+                    <p>Cuidado completo de manos y uñas con esmaltado tradicional</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 45 min</span>
+                        <span class="price">$25</span>
+                    </div>
+                    <button class="btn-service" onclick="selectService('manicura-clasica', 'Manicura Clásica', 25, 45)">
+                        Seleccionar
+                    </button>
+                </div>
+
+                <div class="service-card" data-service="manicura-gel">
+                    <div class="service-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Manicura con Gel</h3>
+                    <p>Esmaltado semipermanente con duración de hasta 3 semanas</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 60 min</span>
+                        <span class="price">$35</span>
+                    </div>
+                    <button class="btn-service" onclick="selectService('manicura-gel', 'Manicura con Gel', 35, 60)">
+                        Seleccionar
+                    </button>
+                </div>
+
+                <div class="service-card" data-service="pedicura">
+                    <div class="service-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Pedicura</h3>
+                    <p>Tratamiento completo de pies con exfoliación y hidratación</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 50 min</span>
+                        <span class="price">$30</span>
+                    </div>
+                    <button class="btn-service" onclick="selectService('pedicura', 'Pedicura', 30, 50)">
+                        Seleccionar
+                    </button>
+                </div>
+
+                <div class="service-card" data-service="unas-acrilicas">
+                    <div class="service-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>Uñas Acrílicas</h3>
+                    <p>Extensión y esculpido de uñas con técnica acrílica profesional</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
+                        <span class="price">$45</span>
+                    </div>
+                    <button class="btn-service" onclick="selectService('unas-acrilicas', 'Uñas Acrílicas', 45, 90)">
+                        Seleccionar
+                    </button>
+                </div>
+
+                <div class="service-card" data-service="nail-art">
+                    <div class="service-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Nail Art</h3>
+                    <p>Diseños personalizados y decoración artística en uñas</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 75 min</span>
+                        <span class="price">$40</span>
+                    </div>
+                    <button class="btn-service" onclick="selectService('nail-art', 'Nail Art', 40, 75)">
+                        Seleccionar
+                    </button>
+                </div>
+
+                <div class="service-card" data-service="tratamiento-cuticular">
+                    <div class="service-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Tratamiento Cuticular</h3>
+                    <p>Cuidado especializado de cutículas con productos nutritivos</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 30 min</span>
+                        <span class="price">$20</span>
+                    </div>
+                    <button class="btn-service" onclick="selectService('tratamiento-cuticular', 'Tratamiento Cuticular', 20, 30)">
+                        Seleccionar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agendar Section -->
+    <section id="agendar" class="booking">
+        <div class="container">
+            <div class="section-header">
+                <h2>Agendar Cita</h2>
+                <p>Reserva tu turno de forma rápida y sencilla</p>
+            </div>
+            <div class="booking-container">
+                <div class="booking-form">
+                    <form id="appointmentForm">
+                        <div class="form-group">
+                            <label for="clientName">Nombre Completo</label>
+                            <input type="text" id="clientName" name="clientName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientPhone">Teléfono (WhatsApp)</label>
+                            <input type="tel" id="clientPhone" name="clientPhone" placeholder="11 1234-5678" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientEmail">Email</label>
+                            <input type="email" id="clientEmail" name="clientEmail" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="selectedService">Servicio</label>
+                            <select id="selectedService" name="selectedService" required>
+                                <option value="">Selecciona un servicio</option>
+                                <option value="manicura-clasica" data-price="25" data-duration="45">Manicura Clásica - $25 (45 min)</option>
+                                <option value="manicura-gel" data-price="35" data-duration="60">Manicura con Gel - $35 (60 min)</option>
+                                <option value="pedicura" data-price="30" data-duration="50">Pedicura - $30 (50 min)</option>
+                                <option value="unas-acrilicas" data-price="45" data-duration="90">Uñas Acrílicas - $45 (90 min)</option>
+                                <option value="nail-art" data-price="40" data-duration="75">Nail Art - $40 (75 min)</option>
+                                <option value="tratamiento-cuticular" data-price="20" data-duration="30">Tratamiento Cuticular - $20 (30 min)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="appointmentDate">Fecha</label>
+                                <input type="text" id="appointmentDate" name="appointmentDate" readonly required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="appointmentTime">Hora</label>
+                                <select id="appointmentTime" name="appointmentTime" required>
+                                    <option value="">Selecciona una hora</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notes">Notas adicionales (opcional)</label>
+                            <textarea id="notes" name="notes" rows="3" placeholder="Algún detalle especial o preferencia..."></textarea>
+                        </div>
+                        
+                        <div class="appointment-summary" id="appointmentSummary" style="display: none;">
+                            <h4>Resumen de tu cita:</h4>
+                            <div class="summary-details">
+                                <p><strong>Servicio:</strong> <span id="summaryService"></span></p>
+                                <p><strong>Fecha:</strong> <span id="summaryDate"></span></p>
+                                <p><strong>Hora:</strong> <span id="summaryTime"></span></p>
+                                <p><strong>Duración:</strong> <span id="summaryDuration"></span> minutos</p>
+                                <p><strong>Precio:</strong> $<span id="summaryPrice"></span></p>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-calendar-check"></i>
+                            Confirmar Cita
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="booking-info">
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <h4>Horarios de Atención</h4>
+                        <p>Lunes a Viernes: 9:00 - 19:00</p>
+                        <p>Sábados: 9:00 - 17:00</p>
+                        <p>Domingos: Cerrado</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <i class="fas fa-star"></i>
+                        <h4>Política de Cancelación</h4>
+                        <p>Puedes cancelar o reprogramar tu cita hasta 2 horas antes del turno.</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <i class="fas fa-gift"></i>
+                        <h4>Programa de Fidelidad</h4>
+                        <p>Gana puntos con cada visita y canjea descuentos especiales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recompensas Section -->
+    <section id="recompensas" class="rewards">
+        <div class="container">
+            <div class="section-header">
+                <h2>Programa de Fidelidad</h2>
+                <p>Gana puntos con cada visita y disfruta de beneficios exclusivos</p>
+            </div>
+            
+            <div class="user-status" id="userStatus" style="display: none;">
+                <div class="status-card">
+                    <div class="status-info">
+                        <h3 id="userName">Mi Perfil</h3>
+                        <div class="points-display">
+                            <span class="points" id="userPoints">0</span>
+                            <span class="points-label">Puntos</span>
+                        </div>
+                        <div class="level-info">
+                            <span class="level" id="userLevel">Nuevo</span>
+                            <span class="visits" id="userVisits">0 visitas</span>
+                        </div>
+                    </div>
+                    <div class="status-actions">
+                        <button class="btn btn-secondary" onclick="openModal('paymentModal')">
+                            <i class="fas fa-credit-card"></i>
+                            Registrar Pago
+                        </button>
+                        <button class="btn btn-primary" onclick="showRewards()">
+                            <i class="fas fa-gift"></i>
+                            Ver Recompensas
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rewards-info">
+                <div class="how-to-earn">
+                    <h3>¿Cómo ganar puntos?</h3>
+                    <div class="earn-methods">
+                        <div class="earn-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <div>
+                                <h4>Asistir a tu cita</h4>
+                                <p>+50 puntos por cada visita</p>
+                            </div>
+                        </div>
+                        <div class="earn-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Llegar puntual</h4>
+                                <p>+10 puntos extra</p>
+                            </div>
+                        </div>
+                        <div class="earn-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Referir un amigo</h4>
+                                <p>+100 puntos</p>
+                            </div>
+                        </div>
+                        <div class="earn-item">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <h4>Dejar una reseña</h4>
+                                <p>+25 puntos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="loyalty-levels">
+                    <h3>Niveles de Fidelidad</h3>
+                    <div class="levels-grid">
+                        <div class="level-card">
+                            <i class="fas fa-heart"></i>
+                            <h4>Nuevo</h4>
+                            <p>0-4 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-medal"></i>
+                            <h4>Bronce</h4>
+                            <p>5-9 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-trophy"></i>
+                            <h4>Plata</h4>
+                            <p>10-14 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-crown"></i>
+                            <h4>Oro</h4>
+                            <p>15-19 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-gem"></i>
+                            <h4>Diamante</h4>
+                            <p>20+ visitas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="available-rewards" id="availableRewards" style="display: none;">
+                <h3>Recompensas Disponibles</h3>
+                <div class="rewards-grid" id="rewardsGrid">
+                    <!-- Las recompensas se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto Section -->
+    <section id="contacto" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contacto</h2>
+                <p>Estamos aquí para atenderte</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Dirección</h4>
+                            <p>Av. Corrientes 1234, CABA<br>Buenos Aires, Argentina</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Teléfono</h4>
+                            <p>+54 11 1234-5678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>+54 11 1234-5678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@sofinail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-instagram"></i>
+                        <div>
+                            <h4>Instagram</h4>
+                            <p>@sofi_nail_oficial</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Tu email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="phone" placeholder="Tu teléfono">
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" rows="5" placeholder="Tu mensaje" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-hand-sparkles"></i>
+                        <span>SOFÍ NAIL</span>
+                    </div>
+                    <p>El cuidado de tus uñas con la mejor calidad y atención personalizada.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="#servicios">Manicura Clásica</a></li>
+                        <li><a href="#servicios">Manicura con Gel</a></li>
+                        <li><a href="#servicios">Pedicura</a></li>
+                        <li><a href="#servicios">Uñas Acrílicas</a></li>
+                        <li><a href="#servicios">Nail Art</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#agendar">Agendar Cita</a></li>
+                        <li><a href="#recompensas">Recompensas</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Horarios</h4>
+                    <ul>
+                        <li>Lun - Vie: 9:00 - 19:00</li>
+                        <li>Sábados: 9:00 - 17:00</li>
+                        <li>Domingos: Cerrado</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Sofí Nail. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Login/Account Modal - VERSIÓN MEJORADA -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content account-modal">
+            <div class="modal-header account-header">
+                <div class="account-header-content">
+                    <div class="account-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="account-title">
+                        <h3 id="accountModalTitle">Mi Cuenta</h3>
+                        <p id="accountModalSubtitle">Accede a tu perfil de fidelidad</p>
+                    </div>
+                </div>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            
+            <div class="modal-body account-body">
+                <!-- Formulario de Login (cuando no está logueado) -->
+                <div id="loginSection" class="account-section">
+                    <div class="welcome-message">
+                        <i class="fas fa-sparkles"></i>
+                        <h4>¡Bienvenida a Sofí Nail!</h4>
+                        <p>Ingresa tus datos para acceder a tu perfil y disfrutar de nuestro programa de fidelidad</p>
+                    </div>
+                    
+                    <form id="loginForm" class="account-form">
+                        <div class="form-group">
+                            <label for="loginPhone">
+                                <i class="fas fa-phone"></i>
+                                Número de WhatsApp
+                            </label>
+                            <input type="tel" id="loginPhone" name="loginPhone" 
+                                   placeholder="Ej: +54 11 1234-5678" required>
+                            <small class="form-help">Usaremos este número para enviarte notificaciones</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginName">
+                                <i class="fas fa-user"></i>
+                                Nombre Completo
+                            </label>
+                            <input type="text" id="loginName" name="loginName" 
+                                   placeholder="Tu nombre completo" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginEmail">
+                                <i class="fas fa-envelope"></i>
+                                Email (Opcional)
+                            </label>
+                            <input type="email" id="loginEmail" name="loginEmail" 
+                                   placeholder="tu@email.com">
+                            <small class="form-help">Para recibir promociones especiales</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginBirthday">
+                                <i class="fas fa-birthday-cake"></i>
+                                Fecha de Cumpleaños (Opcional)
+                            </label>
+                            <input type="date" id="loginBirthday" name="loginBirthday">
+                            <small class="form-help">¡Recibe puntos especiales en tu cumpleaños!</small>
+                        </div>
+                        
+                        <div class="terms-checkbox">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="acceptTerms" required>
+                                <span class="checkmark"></span>
+                                Acepto recibir notificaciones de WhatsApp y participar en el programa de fidelidad
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-full account-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Crear Mi Perfil
+                        </button>
+                    </form>
+                    
+                    <div class="benefits-preview">
+                        <h5><i class="fas fa-gift"></i> Beneficios de ser miembro:</h5>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-star"></i> Gana puntos con cada visita</li>
+                            <li><i class="fas fa-percent"></i> Descuentos exclusivos</li>
+                            <li><i class="fas fa-bell"></i> Recordatorios de citas</li>
+                            <li><i class="fas fa-birthday-cake"></i> Sorpresas de cumpleaños</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Panel de Usuario (cuando está logueado) -->
+                <div id="userDashboard" class="account-section" style="display: none;">
+                    <div class="user-welcome">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="user-info">
+                            <h4 id="dashboardUserName">¡Hola, Usuario!</h4>
+                            <p id="dashboardUserLevel">Miembro Nuevo</p>
+                        </div>
+                        <div class="user-points">
+                            <span class="points-number" id="dashboardPoints">0</span>
+                            <span class="points-label">Puntos</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalVisits">0</span>
+                                <span class="stat-label">Visitas</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-dollar-sign"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalSpent">$0</span>
+                                <span class="stat-label">Gastado</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-trophy"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="rewardsEarned">0</span>
+                                <span class="stat-label">Recompensas</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-actions">
+                        <button class="dashboard-btn" onclick="showSection('appointments')">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Mis Citas</span>
+                        </button>
+                        <button class="dashboard-btn" onclick="showSection('payments')">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Mis Pagos</span>
+                        </button>
+                        <button class="dashboard-btn" onclick="showSection('rewards')">
+                            <i class="fas fa-gift"></i>
+                            <span>Recompensas</span>
+                        </button>
+                        <button class="dashboard-btn" onclick="showSection('notifications')">
+                            <i class="fas fa-bell"></i>
+                            <span>Notificaciones</span>
+                        </button>
+                    </div>
+                    
+                    <div class="loyalty-progress">
+                        <h5>Progreso de Fidelidad</h5>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="loyaltyProgress" style="width: 0%"></div>
+                        </div>
+                        <p class="progress-text" id="progressText">0 puntos para el próximo nivel</p>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="btn btn-secondary btn-small" onclick="openModal('paymentModal')">
+                            <i class="fas fa-plus"></i>
+                            Registrar Pago
+                        </button>
+                        <button class="btn btn-outline btn-small" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                            Editar Perfil
+                        </button>
+                        <button class="btn btn-outline btn-small logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Pago</h3>
+                <span class="close" onclick="closeModal('paymentModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="paymentAmount">Monto</label>
+                        <input type="number" id="paymentAmount" name="paymentAmount" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentService">Servicio</label>
+                        <select id="paymentService" name="paymentService" required>
+                            <option value="">Selecciona el servicio</option>
+                            <option value="manicura-clasica">Manicura Clásica</option>
+                            <option value="manicura-gel">Manicura con Gel</option>
+                            <option value="pedicura">Pedicura</option>
+                            <option value="unas-acrilicas">Uñas Acrílicas</option>
+                            <option value="nail-art">Nail Art</option>
+                            <option value="tratamiento-cuticular">Tratamiento Cuticular</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Método de Pago</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="efectivo">Efectivo</option>
+                            <option value="tarjeta">Tarjeta</option>
+                            <option value="transferencia">Transferencia</option>
+                            <option value="mercadopago">MercadoPago</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <i class="fas fa-credit-card"></i>
+                        Registrar Pago
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="modal-body">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 id="successTitle">¡Éxito!</h3>
+                <p id="successMessage">Operación completada correctamente</p>
+                <button class="btn btn-primary" onclick="closeModal('successModal')">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
