@@ -1614,9 +1614,25 @@ body {
         margin: 1rem 0;
     }
     
-    /* Ocultar botón del header en móvil */
+    /* Mostrar botón del header en móvil de forma compacta */
     .user-actions {
-        display: none !important;
+        display: flex !important;
+    }
+    
+    .btn-account {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+        min-width: auto;
+    }
+    
+    .btn-account-text {
+        display: none;
+    }
+    
+    .btn-account-icon {
+        font-size: 1.2rem;
+        width: 24px;
+        height: 24px;
     }
     
     /* Mostrar botón en menú móvil SOLO cuando existe */
