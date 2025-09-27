@@ -187,47 +187,35 @@ function getNextLevelVisits(currentVisits) {
 
 // Cargar historial de puntos
 function loadPointsHistory() {
-    const historyContainer = document.getElementById('points-history');
-    if (!historyContainer) return;
-
+    const pointsHistoryContainer = document.getElementById('points-history');
+    if (!pointsHistoryContainer) return;
+    
     const activities = JSON.parse(localStorage.getItem('pointsActivities')) || [];
     
     if (activities.length === 0) {
-        historyContainer.innerHTML = `
+        pointsHistoryContainer.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-history"></i>
                 <p>No hay actividad de puntos aún</p>
-                <small>Los puntos aparecerán aquí cuando realices actividades</small>
             </div>
         `;
         return;
     }
-
-    historyContainer.innerHTML = `
-        <div class="points-summary">
-            <h3>Historial de Puntos</h3>
-            <div class="total-points">
-                <span class="points-number">${localStorage.getItem('userPoints') || 0}</span>
-                <span class="points-label">Puntos Totales</span>
+    
+    pointsHistoryContainer.innerHTML = activities.map(activity => `
+        <div class="points-activity-item">
+            <div class="activity-icon ${activity.points > 0 ? 'positive' : 'negative'}">
+                <i class="fas ${activity.points > 0 ? 'fa-plus' : 'fa-minus'}"></i>
+            </div>
+            <div class="activity-details">
+                <h4>${activity.reason}</h4>
+                <p>${window.formatDate ? window.formatDate(activity.date, 'datetime') : activity.date}</p>
+            </div>
+            <div class="activity-points ${activity.points > 0 ? 'positive' : 'negative'}">
+                ${activity.points > 0 ? '+' : ''}${activity.points}
             </div>
         </div>
-        <div class="activities-list">
-            ${activities.slice(0, 10).map(activity => `
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-plus-circle"></i>
-                    </div>
-                    <div class="activity-info">
-                        <p class="activity-reason">${activity.reason}</p>
-                        <small class="activity-date">${formatDateTime(activity.date)}</small>
-                    </div>
-                    <div class="activity-points">
-                        +${activity.points}
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
+    `).join('');
 }
 
 // Configurar event listeners para recompensas
@@ -298,16 +286,20 @@ function simulatePointsEarning() {
 }
 
 // Formatear fecha y hora
-function formatDateTime(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
+// ELIMINAR ESTA FUNCIÓN (usar formatDate de script.js con parámetro 'datetime')
+// function formatDateTime(dateString) {
+//     const date = new Date(dateString);
+//     return date.toLocaleDateString('es-ES', {
+//         day: '2-digit',
+//         month: '2-digit',
+//         year: 'numeric',
+//         hour: '2-digit',
+//         minute: '2-digit'
+//     });
+// }
+
+// REEMPLAZAR TODAS LAS LLAMADAS A formatDateTime por:
+// window.formatDate(dateString, 'datetime')
 
 // Obtener estadísticas de usuario
 function getUserStats() {

@@ -399,9 +399,16 @@ function sendWhatsAppMessage(message, phone) {
     window.open(url, '_blank');
 }
 
-// Formatear fecha
-function formatDate(dateString) {
-    const date = new Date(dateString);
+// Formatear fecha (unificada)
+function formatDate(dateInput) {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    
+    // Para formularios (formato ISO)
+    if (arguments[1] === 'iso') {
+        return date.toISOString().split('T')[0];
+    }
+    
+    // Para mostrar al usuario (formato español)
     return date.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
@@ -715,6 +722,10 @@ function setupCalendarEventListeners() {
 // Renderizar el calendario
 function renderCalendar() {
     const calendarDays = document.getElementById('calendarDays');
+    if (!calendarDays) {
+        console.warn('Elemento calendarDays no encontrado');
+        return;
+    }
     calendarDays.innerHTML = '';
     
     const year = currentDate.getFullYear();
@@ -925,7 +936,6 @@ function handleAppointmentSubmit(e) {
         time: selectedTime,
         name: formData.get('clientName'),
         phone: formData.get('clientPhone'),
-        email: formData.get('clientEmail'),
         notes: formData.get('notes'),
         status: 'confirmada',
         createdAt: new Date().toISOString()
@@ -969,9 +979,7 @@ function resetBooking() {
 }
 
 // Funciones auxiliares
-function formatDate(date) {
-    return date.toISOString().split('T')[0];
-}
+
 
 function formatDateDisplay(date) {
     return date.toLocaleDateString('es-ES', {
@@ -1321,7 +1329,6 @@ function confirmModalAppointment() {
         client: {
             name: formData.get('modalClientName'),
             phone: formData.get('modalClientPhone'),
-            email: formData.get('modalClientEmail'),
             notes: formData.get('modalNotes') || ''
         },
         status: 'confirmed',
@@ -1446,7 +1453,6 @@ function editProfile() {
         // Llenar el formulario con datos actuales
         document.getElementById('loginPhone').value = userData.phone || '';
         document.getElementById('loginName').value = userData.name || '';
-        document.getElementById('loginEmail').value = userData.email || '';
         document.getElementById('loginBirthday').value = userData.birthday || '';
         
         // Cambiar a modo edición
@@ -1567,7 +1573,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         const formData = {
             phone: phone,
             name: document.getElementById('loginName').value,
-            email: document.getElementById('loginEmail').value,
+
             birthday: document.getElementById('loginBirthday').value,
             createdAt: new Date().toISOString()
         };
@@ -1806,6 +1812,27 @@ function bookServiceFromGallery() {
     if (serviceData) {
         // Abrir modal de reserva con el servicio seleccionado
         openBookingModalWithService(serviceData.id, serviceData.name, serviceData.price, serviceData.duration);
+    }
+}
+
+// Función para mostrar/ocultar contraseña
+function togglePassword(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(inputId + 'ToggleIcon');
+    
+    if (!passwordInput || !toggleIcon) {
+        console.error('No se encontró el campo de contraseña o el icono');
+        return;
+    }
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
     }
 }
 
