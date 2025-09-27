@@ -2909,6 +2909,10 @@ body {
     .carousel-image.active {
         transform: translateZ(80px) scale(1.1);
     }
+<<<<<<< HEAD
 }l-image.active {
         transform: translateZ(80px) scale(1.1);
     }
+=======
+}
+>>>>>>> 52a611543b4420f344e7645160153d398f67c99f
