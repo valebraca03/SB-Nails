@@ -1,3 +1,90 @@
+// Configuración para Google Apps Script (GRATUITO)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqQDjXmrU521uGVekgtJh26wE0FCURIn1M01jFzQt0dYXexnA2kIa7Rn_256zpjVbL/exec'; // Reemplazar con la URL de tu Google Apps Script
+
+// Función para hacer peticiones a Google Apps Script
+async function callAppsScript(action, data = {}) {
+    try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: action,
+                data: data
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        return result;
+        
+    } catch (error) {
+        console.error('Error en Apps Script:', error);
+        throw error;
+    }
+}
+
+// Funciones para interactuar con Google Sheets
+async function getSheetData(sheetName, range = '') {
+    try {
+        const result = await callAppsScript('getSheetData', {
+            sheetName: sheetName,
+            range: range
+        });
+        return result.data || [];
+    } catch (error) {
+        console.error('Error al obtener datos:', error);
+        return [];
+    }
+}
+
+async function appendToSheet(sheetName, values) {
+    try {
+        const result = await callAppsScript('appendToSheet', {
+            sheetName: sheetName,
+            values: values
+        });
+        return result;
+    } catch (error) {
+        console.error('Error al agregar datos:', error);
+        throw error;
+    }
+}
+
+async function updateSheetRow(sheetName, range, values) {
+    try {
+        const result = await callAppsScript('updateSheetRow', {
+            sheetName: sheetName,
+            range: range,
+            values: values
+        });
+        return result;
+    } catch (error) {
+        console.error('Error al actualizar fila:', error);
+        throw error;
+    }
+}
+
+// Función para obtener turnos ocupados desde Google Sheets
+async function getOccupiedDates() {
+    try {
+        const result = await callAppsScript('getOccupiedDates');
+        return result.occupiedDates || [];
+    } catch (error) {
+        console.error('Error al obtener turnos ocupados:', error);
+        // Fallback a fechas hardcodeadas en caso de error
+        return [
+            '2025-01-28', 
+            '2025-02-05', 
+            '2025-02-12'
+        ];
+    }
+}
+
 let currentStep = 1;
 let selectedService = null;
 let selectedDate = null;
@@ -27,13 +114,13 @@ const services = {
 };
 
 
-function openBookingModal() {
+async function openBookingModal() {
     const modal = document.getElementById('bookingModal');
     modal.style.display = 'flex';
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
     resetModal();
-    initializeCalendar();
+    await initializeCalendar();
 }
 
 function closeModal(modalId) {
@@ -90,7 +177,7 @@ function selectModalService(serviceKey, serviceName, price, duration) {
 }
 
 
-function nextModalStep() {
+async function nextModalStep() {
     if (currentStep === 1 && !selectedService) {
         alert('Por favor selecciona un servicio');
         return;
@@ -121,7 +208,7 @@ function nextModalStep() {
         });
         
         if (currentStep === 2) {
-            initializeCalendar();
+            await initializeCalendar();
         } else if (currentStep === 3) {
             generateTimeSlots();
         } else if (currentStep === 4) {
@@ -176,9 +263,9 @@ function updateNavigationButtons() {
     }
 }
 
-function initializeCalendar() {
+async function initializeCalendar() {
     updateCalendarHeader();
-    generateCalendarDays();
+    await generateCalendarDays();
     setupCalendarNavigation();
 }
 
@@ -186,7 +273,7 @@ function updateCalendarHeader() {
     document.getElementById('modalCurrentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
 }
 
-function generateCalendarDays() {
+async function generateCalendarDays() {
     const calendarDays = document.getElementById('modalCalendarDays');
     calendarDays.innerHTML = '';
     
@@ -198,11 +285,8 @@ function generateCalendarDays() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const occupiedDates = [
-        '2025-01-28', 
-        '2025-02-05', 
-        '2025-02-12' 
-    ];
+    // Obtener fechas ocupadas desde Google Sheets
+    const occupiedDates = await getOccupiedDates();
     
     for (let i = 0; i < 42; i++) {
         const date = new Date(startDate);
@@ -242,24 +326,24 @@ function generateCalendarDays() {
 }
 
 function setupCalendarNavigation() {
-    document.getElementById('modalPrevMonth').onclick = () => {
+    document.getElementById('modalPrevMonth').onclick = async () => {
         currentMonth--;
         if (currentMonth < 0) {
             currentMonth = 11;
             currentYear--;
         }
         updateCalendarHeader();
-        generateCalendarDays();
+        await generateCalendarDays();
     };
     
-    document.getElementById('modalNextMonth').onclick = () => {
+    document.getElementById('modalNextMonth').onclick = async () => {
         currentMonth++;
         if (currentMonth > 11) {
             currentMonth = 0;
             currentYear++;
         }
         updateCalendarHeader();
-        generateCalendarDays();
+        await generateCalendarDays();
     };
 }
 
@@ -328,7 +412,65 @@ function updateAppointmentSummary() {
 
 
 
-function confirmModalAppointment() {
+// Función para actualizar puntos y visitas del cliente
+async function updateClientPointsAndVisits(phone, name, servicePrice) {
+    try {
+        const clientsData = await getSheetData('clientes');
+        let clientRowIndex = -1;
+        let currentClient = null;
+        
+        // Buscar el cliente existente
+        for (let i = 1; i < clientsData.length; i++) {
+            if (clientsData[i][1] === phone) { // Columna B: Numero
+                clientRowIndex = i + 1; // +1 porque las filas en Sheets empiezan en 1
+                currentClient = clientsData[i];
+                break;
+            }
+        }
+        
+        if (clientRowIndex > 0) {
+            // Cliente existente - actualizar puntos y visitas
+            const currentVisits = parseInt(currentClient[5]) || 0; // Columna F: Visitas
+            const currentPoints = parseInt(currentClient[4]) || 0; // Columna E: Puntos
+            
+            const newVisits = currentVisits + 1;
+            const pointsToAdd = Math.floor(servicePrice / 1000); // 1 punto por cada $1000
+            const newPoints = currentPoints + pointsToAdd;
+            
+            // Actualizar la fila del cliente
+            const updatedClientData = [
+                currentClient[0], // Contraseña
+                phone,            // Numero
+                currentClient[2], // Nombre Completo
+                currentClient[3], // Fecha de Cumpleaños
+                newPoints,        // Puntos actualizados
+                newVisits         // Visitas actualizadas
+            ];
+            
+            await updateSheetRow('clientes', `A${clientRowIndex}:F${clientRowIndex}`, updatedClientData);
+            
+        } else {
+            // Cliente nuevo - crear registro
+            const pointsToAdd = Math.floor(servicePrice / 1000);
+            const newClientData = [
+                'temp123',        // Contraseña temporal
+                phone,            // Numero
+                name,             // Nombre Completo
+                'none',           // Fecha de Cumpleaños
+                pointsToAdd,      // Puntos iniciales
+                1                 // Primera visita
+            ];
+            
+            await appendToSheet('clientes', newClientData);
+        }
+        
+    } catch (error) {
+        console.error('Error al actualizar puntos y visitas del cliente:', error);
+        // No lanzar error para no interrumpir el flujo de confirmación del turno
+    }
+}
+
+async function confirmModalAppointment() {
     const form = document.getElementById('modalAppointmentForm');
     const formData = new FormData(form);
     
@@ -341,27 +483,50 @@ function confirmModalAppointment() {
         return;
     }
     
-
-    const appointment = {
-        service: selectedService,
-        date: selectedDate,
-        time: selectedTime,
-        client: {
-            name: name,
-            phone: phone,
-            notes: notes
-        },
-        timestamp: new Date()
-    };
-    
-
-    console.log('Appointment created:', appointment);
-    
-
-    alert(`¡Cita confirmada!\n\nServicio: ${selectedService.name}\nFecha: ${selectedDate.toLocaleDateString('es-ES')}\nHora: ${selectedTime}\nCliente: ${name}\n\nTe contactaremos por WhatsApp para confirmar los detalles.`);
-    
- 
-    closeModal('bookingModal');
+    try {
+        // Formatear fecha para Google Sheets (YYYY-MM-DD)
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        
+        // Preparar datos para la hoja "turnos"
+        const turnoData = [
+            name,                    // Columna A: nombre
+            selectedService.name,    // Columna B: servicio
+            formattedDate,          // Columna C: fecha
+            selectedTime,           // Columna D: hora
+            'pendiente',            // Columna E: estado
+            selectedService.price,  // Columna F: precio
+            phone,                  // Columna G: teléfono
+            notes || ''             // Columna H: notas
+        ];
+        
+        // Registrar el turno en Google Sheets
+        await appendToSheet('turnos', turnoData);
+        
+        // Actualizar puntos y visitas del cliente
+        await updateClientPointsAndVisits(phone, name, selectedService.price);
+        
+        const appointment = {
+            service: selectedService,
+            date: selectedDate,
+            time: selectedTime,
+            client: {
+                name: name,
+                phone: phone,
+                notes: notes
+            },
+            timestamp: new Date()
+        };
+        
+        console.log('Appointment created:', appointment);
+        
+        alert(`¡Cita confirmada y registrada!\n\nServicio: ${selectedService.name}\nFecha: ${selectedDate.toLocaleDateString('es-ES')}\nHora: ${selectedTime}\nCliente: ${name}\n\nTe contactaremos por WhatsApp para confirmar los detalles.`);
+        
+        closeModal('bookingModal');
+        
+    } catch (error) {
+        console.error('Error al confirmar la cita:', error);
+        alert('Hubo un error al registrar la cita. Por favor, intenta nuevamente.');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -545,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         showLoginForm();
                         loginForm.reset();
                     } else {
-                        alert(`Error al registrar: ${registerResult.error}`);
+                        alert(`Error al registrar: ${registerResult.message}`);
                     }
                     
                 } else if (isEditMode) {
@@ -559,7 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         showUserDashboard(loginResult.user);
                         alert(`¡Bienvenida de vuelta, ${loginResult.user["Nombre Completo"]}!`);
                     } else {
-                        alert(`Error al iniciar sesión: ${loginResult.error}`);
+                        alert(`Error al iniciar sesión: ${loginResult.message}`);
                     }
                 }
             } catch (error) {
@@ -1144,51 +1309,90 @@ function bookServiceFromGallery() {
 }
 
 async function registerUser(userData) {
-    console.log('Registro simulado para:', userData);
-    
-    // Simular un pequeño delay como si fuera una petición real
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Siempre devolver éxito
-    return { 
-        success: true, 
-        data: {
-            "Numero": userData.phone,
-            "Contraseña": userData.password,
-            "Nombre Completo": userData.name,
-            "Fecha de Cumpleaños": userData.birthday || 'none',
-            "Puntos": 0,
-            "Visitas": 0
+    try {
+        // Verificar si el usuario ya existe
+        const userExists = await checkUserExists(userData.phone);
+        if (userExists) {
+            return { success: false, message: 'El número de teléfono ya está registrado' };
         }
-    };
+        
+        // Crear nuevo usuario en la hoja 'clientes'
+        const newUserData = [
+            userData.password,     // Columna A: Contraseña
+            userData.phone,        // Columna B: Numero
+            userData.name,         // Columna C: Nombre Completo
+            userData.birthday || 'none',    // Columna D: Fecha de Cumpleaños
+            0,                     // Columna E: Puntos (inicial)
+            0                      // Columna F: Visitas (inicial)
+        ];
+        
+        await appendToSheet('clientes', newUserData);
+        
+        return { 
+            success: true, 
+            data: {
+                "Numero": userData.phone,
+                "Contraseña": userData.password,
+                "Nombre Completo": userData.name,
+                "Fecha de Cumpleaños": userData.birthday || 'none',
+                "Puntos": 0,
+                "Visitas": 0
+            }
+        };
+        
+    } catch (error) {
+        console.error('Error al registrar usuario:', error);
+        return { success: false, message: 'Error al registrar usuario. Intenta nuevamente.' };
+    }
 }
 
 async function loginUser(phone, password) {
-    // Simular login exitoso sin base de datos
-    console.log('Login simulado para teléfono:', phone);
-    
-    // Simular un pequeño delay como si fuera una petición real
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Simular datos de usuario para mostrar el dashboard
-    const simulatedUser = {
-        "Numero": phone,
-        "Contraseña": password,
-        "Nombre Completo": "Usuario Demo",
-        "Fecha de Cumpleaños": "01/01/1990",
-        "Puntos": 150,
-        "Visitas": 5
-    };
-    
-    return { success: true, user: simulatedUser };
+    try {
+        const clientsData = await getSheetData('clientes');
+        
+        // Buscar el usuario en la hoja 'clientes'
+        for (let i = 1; i < clientsData.length; i++) {
+            const row = clientsData[i];
+            if (row[1] === phone && row[0] === password) { // Columna B: Numero, Columna A: Contraseña
+                return {
+                    success: true,
+                    user: {
+                        "Numero": row[1],
+                        "Contraseña": row[0],
+                        "Nombre Completo": row[2] || 'Usuario',
+                        "Fecha de Cumpleaños": row[3] || 'No especificado',
+                        "Puntos": parseInt(row[4]) || 0,
+                        "Visitas": parseInt(row[5]) || 0
+                    }
+                };
+            }
+        }
+        
+        return { success: false, message: 'Teléfono o contraseña incorrectos' };
+        
+    } catch (error) {
+        console.error('Error al hacer login:', error);
+        return { success: false, message: 'Error al iniciar sesión. Intenta nuevamente.' };
+    }
 }
 
 async function checkUserExists(phone) {
-    console.log('Verificación simulada para teléfono:', phone);
-    
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    return false;
+    try {
+        const clientsData = await getSheetData('clientes');
+        
+        // Buscar el teléfono en la hoja 'clientes'
+        for (let i = 1; i < clientsData.length; i++) {
+            if (clientsData[i][1] === phone) { // Columna B: Numero
+                return true;
+            }
+        }
+        
+        return false;
+        
+    } catch (error) {
+        console.error('Error al verificar usuario:', error);
+        return false;
+    }
 }
 
 // Funciones para manejar el estado de sesión
