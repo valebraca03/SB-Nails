@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sbsofinails - Contacto</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-hand-sparkles"></i>
+                    <span class="logo-text">Sbsofinails</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                    <li><a href="#servicios" class="nav-link">Servicios</a></li>
+                    <li><a href="#agendar" class="nav-link">Agendar</a></li>
+                    <li><a href="#recompensas" class="nav-link">Recompensas</a></li>
+                    <li><a href="#contacto" class="nav-link">Contacto</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn-account" onclick="openModal('loginModal')" id="accountButton">
+                        <div class="btn-account-content">
+                            <div class="btn-account-icon">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="btn-account-text">
+                                <span class="btn-account-label">Mi Cuenta</span>
+                            </div>
+                        </div>
+                        <div class="btn-account-notification" id="accountNotification" style="display: none;">
+                            <span class="notification-dot"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content account-modal">
+            <div class="modal-header account-header">
+                <div class="account-header-content">
+                    <div class="account-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="account-title">
+                        <h3 id="accountModalTitle">Mi Cuenta</h3>
+                        <p id="accountModalSubtitle">Accede a tu perfil de fidelidad</p>
+                    </div>
+                </div>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            
+            <div class="modal-body account-body">
+
+                <div id="loginSection" class="account-section">
+                    <div class="welcome-message">
+                        <i class="fas fa-sparkles"></i>
+                        <h4 id="welcomeTitle">¡Bienvenida a Sbsofinails!</h4>
+                        <p id="welcomeText">Ingresa tus datos para acceder a tu perfil y disfrutar de nuestro programa de fidelidad</p>
+                    </div>
+                    
+                    <div class="auth-toggle">
+                        <button type="button" class="toggle-btn active" id="registerToggle" onclick="showRegisterForm()">
+                            <i class="fas fa-user-plus"></i>
+                            Crear Cuenta
+                        </button>
+                        <button type="button" class="toggle-btn" id="loginToggle" onclick="showLoginForm()">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Ya tengo cuenta
+                        </button>
+                    </div>
+                    
+                    <form id="loginForm" class="account-form">
+                        <div class="form-group">
+                            <label for="loginPhone">
+                                <i class="fas fa-phone"></i>
+                                Número de WhatsApp
+                            </label>
+                            <input type="tel" id="loginPhone" name="loginPhone" 
+                                   placeholder="Ej: +54 11 1234-5678" required>
+                            <small class="form-help">Usaremos este número para enviarte notificaciones</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginPassword">
+                                <i class="fas fa-lock"></i>
+                                Contraseña
+                            </label>
+                            <div class="password-input-container">
+                                <input type="password" id="loginPassword" name="loginPassword" 
+                                       placeholder="Ingresa tu contraseña" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')" aria-label="Mostrar/ocultar contraseña">
+                                    <i class="fas fa-eye" id="loginPasswordToggleIcon"></i>
+                                </button>
+                            </div>
+                            <small class="form-help" id="passwordHelp">Mínimo 5 caracteres</small>
+                        </div>
+                        
+                        <div id="registerFields">
+                            <div class="form-group">
+                                <label for="confirmPassword">
+                                    <i class="fas fa-lock"></i>
+                                    Confirmar Contraseña
+                                </label>
+                                <div class="password-input-container">
+                                    <input type="password" id="confirmPassword" name="confirmPassword" 
+                                           placeholder="Confirma tu contraseña">
+                                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                        <i class="fas fa-eye" id="confirmPasswordToggleIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loginName">
+                                    <i class="fas fa-user"></i>
+                                    Nombre Completo
+                                </label>
+                                <input type="text" id="loginName" name="loginName" 
+                                       placeholder="Tu nombre completo" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loginBirthday">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    Fecha de Cumpleaños (Opcional)
+                                </label>
+                                <input type="date" id="loginBirthday" name="loginBirthday">
+                                <small class="form-help">¡Recibe puntos especiales en tu cumpleaños!</small>
+                            </div>
+
+                            <div class="terms-checkbox">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="acceptTerms" required>
+                                    <span class="checkmark"></span>
+                                    Acepto recibir notificaciones de WhatsApp y participar en el programa de fidelidad
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-full account-btn" id="submitBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Crear Mi Perfil
+                        </button>
+                    </form>
+                    
+                    <div class="benefits-preview" id="benefitsSection">
+                        <h5><i class="fas fa-gift"></i> Beneficios de ser miembro:</h5>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-star"></i> Gana puntos con cada visita</li>
+                            <li><i class="fas fa-percent"></i> Descuentos exclusivos</li>
+                            <li><i class="fas fa-bell"></i> Recordatorios de citas</li>
+                            <li><i class="fas fa-birthday-cake"></i> Sorpresas de cumpleaños</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="userDashboard" class="account-section" style="display: none;">
+                    <div class="user-welcome">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="user-info">
+                            <h4 id="dashboardUserName">¡Hola, Usuario!</h4>
+                            <p id="dashboardUserLevel">Miembro Nuevo</p>
+                        </div>
+                        <div class="user-points">
+                            <span class="points-number" id="dashboardPoints">0</span>
+                            <span class="points-label">Puntos</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalVisits">0</span>
+                                <span class="stat-label">Visitas</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-trophy"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="rewardsEarned">0</span>
+                                <span class="stat-label">Recompensas</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-actions">
+                        <button class="dashboard-btn" onclick="showSection('appointments')">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Mis Citas</span>
+                        </button>
+                        <button class="dashboard-btn" onclick="showSection('rewards')">
+                            <i class="fas fa-gift"></i>
+                            <span>Recompensas</span>
+                        </button>
+                        <button class="dashboard-btn" onclick="showSection('notifications')">
+                            <i class="fas fa-bell"></i>
+                            <span>Notificaciones</span>
+                        </button>
+                    </div>
+                    
+                    <div class="loyalty-progress">
+                        <h5>Progreso de Fidelidad</h5>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="loyaltyProgress" style="width: 0%"></div>
+                        </div>
+                        <p class="progress-text" id="progressText">0 puntos para el próximo nivel</p>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="btn btn-outline btn-small" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                            Editar Perfil
+                        </button>
+                        <button class="btn btn-outline btn-small logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Pago</h3>
+                <span class="close" onclick="closeModal('paymentModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="paymentAmount">Monto</label>
+                        <input type="number" id="paymentAmount" name="paymentAmount" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentService">Servicio</label>
+                        <select id="paymentService" name="paymentService" required>
+                            <option value="">Selecciona el servicio</option>
+                            <option value="semipermanente">Semipermanente</option>
+                            <option value="capping-gel">Capping Gel</option>
+                            <option value="soft-gel">Soft Gel</option>
+                            <option value="capping-polygel">Capping Polygel</option>
+                            <option value="retiro">Retiro</option>
+                            <option value="belleza-pies">Belleza de Pies</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Método de Pago</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="efectivo">Efectivo</option>
+                            <option value="tarjeta">Tarjeta</option>
+                            <option value="transferencia">Transferencia</option>
+                            <option value="mercadopago">MercadoPago</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <i class="fas fa-credit-card"></i>
+                        Registrar Pago
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Sbsofinails</h1>
+                <p class="tagline">El cuidado de tus uñas</p>
+                <p class="hero-description">
+                    Descubre la belleza en cada detalle. Ofrecemos servicios profesionales de manicura, 
+                    pedicura y nail art con los mejores productos y técnicas del mercado.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#agendar" class="btn btn-primary">
+                        <i class="fas fa-calendar-plus"></i>
+                        Agendar Cita
+                    </a>
+                    <a href="#servicios" class="btn btn-secondary">
+                        <i class="fas fa-sparkles"></i>
+                        Ver Servicios
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <i class="fas fa-hand-sparkles hero-icon"></i>
+                    <h3>Profesional</h3>
+                    <p>Técnicas especializadas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicios" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nuestros Servicios</h2>
+                <p>Tratamientos profesionales para el cuidado de tus uñas</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" data-service="semipermanente">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>Semipermanente</h3>
+                    <p>resistencia, estilo y acabado profesional</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i>40 min</span>
+                        <span class="price">$13.000</span>
+                    </div>
+                    <button class="btn-service" onclick="openServiceGallery('semipermanente', 'Semipermanente')">
+                        Ver Ejemplos
+                    </button>
+                </div>
+                <div class="service-card" data-service="capping-gel">
+                    <div class="service-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Capping Gel</h3>
+                    <p>Fortalece y cuida tus uñas con un brillo elegante y duradero</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 1,30 h</span>
+                        <span class="price">$15.000</span>
+                    </div>
+                    <button class="btn-service" onclick="openServiceGallery('capping-gel', 'Capping Gel')">
+                        Ver Ejemplos
+                    </button>
+                </div>
+                <div class="service-card" data-service="soft-gel">
+                    <div class="service-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Soft Gel</h3>
+                    <p>La técnica ideal para lograr extensión perfecta y cómoda</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 1,30 h</span>
+                        <span class="price">$17.000</span>
+                    </div>
+                    <button class="btn-service" onclick="openServiceGallery('soft-gel', 'Soft Gel')">
+                        Ver Ejemplos
+                    </button>
+                </div>
+                <div class="service-card" data-service="capping-polygel">
+                    <div class="service-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>Capping Polygel</h3>
+                    <p>Protección duradera y uñas fuertes sin perder flexibilidad</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 2 h</span>
+                        <span class="price">$17.000</span>
+                    </div>
+                    <button class="btn-service" onclick="openServiceGallery('capping-polygel', 'Capping Polygel')">
+                        Ver Ejemplos
+                    </button>
+                </div>
+                <div class="service-card" data-service="retiro">
+                    <div class="service-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <h3>Retiro</h3>
+                    <p>un proceso seguro, sin dañar ni debilitar tus uñas</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 20 min</span>
+                        <span class="price">$6.000</span>
+                    </div>
+                    <button class="btn-service" onclick="openServiceGallery('retiro', 'Retiro')">
+                        Ver Ejemplos
+                    </button>
+                </div>
+                <div class="service-card" data-service="belleza-pies">
+                    <div class="service-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Belleza de Pies</h3>
+                    <p>Un tratamiento completo para pies sanos y estéticamente perfectos</p>
+                    <div class="service-details">
+                        <span class="duration"><i class="fas fa-clock"></i> 40 min</span>
+                        <span class="price">$14.000</span>
+                    </div>
+                    <button class="btn-service" onclick="openServiceGallery('belleza-pies', 'Belleza de Pies')">
+                        Ver Ejemplos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="agendar" class="booking">
+        <div class="container">
+            <div class="section-header">
+                <h2>Agendar Cita</h2>
+                <p>Selecciona el día y horario que más te convenga</p>
+                <div class="quick-booking">
+                    <button class="btn btn-primary btn-large" onclick="openBookingModal()">
+                        <i class="fas fa-calendar-plus"></i>
+                        Programar Cita
+                    </button>
+                </div>
+            </div>
+            
+            <div class="booking-info">
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+                    <h4>Horarios de Atención</h4>
+                    <p>Lunes a Viernes: 9:00 - 19:00</p>
+                    <p>Sábados: 9:00 - 17:00</p>
+                    <p>Domingos: Cerrado</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-star"></i>
+                    <h4>Política de Cancelación</h4>
+                    <p>Puedes cancelar o reprogramar tu cita hasta 2 horas antes del turno.</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-gift"></i>
+                    <h4>Programa de Fidelidad</h4>
+                    <p>Gana puntos con cada visita y consigue descuentos especiales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content booking-modal">
+            <div class="modal-header">
+                <h3>Agendar Cita</h3>
+                <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="booking-steps">
+                    <div class="step active" id="step1">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Servicio</span>
+                    </div>
+                    <div class="step" id="step2">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Fecha</span>
+                    </div>
+                    <div class="step" id="step3">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Hora</span>
+                    </div>
+                    <div class="step" id="step4">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Datos</span>
+                    </div>
+                </div>
+
+                <div id="serviceSelection" class="booking-step-content">
+                    <h4>Selecciona tu servicio</h4>
+                    <div class="services-modal-grid">
+                        <div class="service-modal-card" data-service="semipermanente" onclick="selectModalService('semipermanente', 'Semipermanente', 13000, 40)">
+                            <div class="service-modal-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <h5>Semipermanente</h5>
+                            <p>Resistencia, estilo y acabado profesional</p>
+                            <div class="service-modal-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 40 min</span>
+                                <span class="price">$13.000</span>
+                            </div>
+                        </div>
+
+                        <div class="service-modal-card" data-service="capping-gel" onclick="selectModalService('capping-gel', 'Capping Gel', 15000, 90)">
+                            <div class="service-modal-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <h5>Capping Gel</h5>
+                            <p>Fortalece y cuida tus uñas con un brillo elegante y duradero</p>
+                            <div class="service-modal-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 1,30 h</span>
+                                <span class="price">$15.000</span>
+                            </div>
+                        </div>
+
+                        <div class="service-modal-card" data-service="soft-gel" onclick="selectModalService('soft-gel', 'Soft Gel', 17000, 90)">
+                            <div class="service-modal-icon">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <h5>Soft Gel</h5>
+                            <p>La técnica ideal para lograr extensión perfecta y cómoda</p>
+                            <div class="service-modal-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 1,30 h</span>
+                                <span class="price">$17.000</span>
+                            </div>
+                        </div>
+
+                        <div class="service-modal-card" data-service="capping-polygel" onclick="selectModalService('capping-polygel', 'Capping Polygel', 17000, 120)">
+                            <div class="service-modal-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h5>Capping Polygel</h5>
+                            <p>Protección y fortalecimiento con acabado profesional</p>
+                            <div class="service-modal-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 2 h</span>
+                                <span class="price">$17.000</span>
+                            </div>
+                        </div>
+
+                        <div class="service-modal-card" data-service="retiro" onclick="selectModalService('retiro', 'Retiro', 6000, 20)">
+                            <div class="service-modal-icon">
+                                <i class="fas fa-hand-paper"></i>
+                            </div>
+                            <h5>Retiro</h5>
+                            <p>Un proceso seguro, sin dañar ni debilitar tus uñas</p>
+                            <div class="service-modal-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 20 min</span>
+                                <span class="price">$6.000</span>
+                            </div>
+                        </div>
+
+                        <div class="service-modal-card" data-service="belleza-pies" onclick="selectModalService('belleza-pies', 'Belleza de Pies', 14000, 40)">
+                            <div class="service-modal-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h5>Belleza de Pies</h5>
+                            <p>Un tratamiento completo para pies sanos y estéticamente perfectos</p>
+                            <div class="service-modal-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 40 min</span>
+                                <span class="price">$14.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dateSelection" class="booking-step-content" style="display: none;">
+                    <h4>Selecciona la fecha</h4>
+                    <div class="modal-calendar-container">
+                        <div class="modal-calendar-header">
+                            <button class="modal-calendar-nav" id="modalPrevMonth">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h5 id="modalCurrentMonth">Enero 2025</h5>
+                            <button class="modal-calendar-nav" id="modalNextMonth">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-calendar-grid">
+                            <div class="modal-calendar-weekdays">
+                                <div class="modal-weekday">L</div>
+                                <div class="modal-weekday">M</div>
+                                <div class="modal-weekday">M</div>
+                                <div class="modal-weekday">J</div>
+                                <div class="modal-weekday">V</div>
+                                <div class="modal-weekday">S</div>
+                                <div class="modal-weekday">D</div>
+                            </div>
+                            <div class="modal-calendar-days" id="modalCalendarDays">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="timeSelection" class="booking-step-content" style="display: none;">
+                    <h4>Selecciona la hora</h4>
+                    <p class="selected-info">Fecha seleccionada: <span id="modalSelectedDate"></span></p>
+                    <div class="modal-time-slots" id="modalTimeSlots">
+                    </div>
+                </div>
+
+                <div id="clientData" class="booking-step-content" style="display: none;">
+                    <h4>Confirma tu cita</h4>
+                    <div class="booking-summary">
+                        <div class="summary-card">
+                            <h5>Resumen de tu cita</h5>
+                            <div class="summary-item">
+                                <span class="summary-label">Servicio:</span>
+                                <span id="modalSummaryService">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Fecha:</span>
+                                <span id="modalSummaryDate">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Hora:</span>
+                                <span id="modalSummaryTime">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Duración:</span>
+                                <span id="modalSummaryDuration">-</span> min
+                            </div>
+                            <div class="summary-item total">
+                                <span class="summary-label">Total:</span>
+                                <span id="modalSummaryPrice">$-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="modalAppointmentForm" class="modal-booking-form">
+                        <div class="form-group">
+                            <label for="modalClientName">Nombre Completo</label>
+                            <input type="text" id="modalClientName" name="modalClientName"  required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="modalClientPhone">Teléfono (WhatsApp)</label>
+                            <input type="tel" id="modalClientPhone" name="modalClientPhone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="modalNotes">Notas adicionales (opcional)</label>
+                            <textarea id="modalNotes" name="modalNotes" rows="3" placeholder="Algún detalle especial..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-navigation">
+                    <button type="button" class="btn btn-secondary" id="modalPrevBtn" onclick="previousModalStep()" style="display: none;">
+                        <i class="fas fa-arrow-left"></i>
+                        Anterior
+                    </button>
+                    <button type="button" class="btn btn-primary" id="modalNextBtn" onclick="nextModalStep()">
+                        Siguiente
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="modalConfirmBtn" onclick="confirmModalAppointment()" style="display: none;">
+                        <i class="fas fa-calendar-check"></i>
+                        Confirmar Cita
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="recompensas" class="rewards">
+        <div class="container">
+            <div class="section-header">
+                <h2>Programa de Fidelidad</h2>
+                <p>Gana puntos con cada visita y disfruta de beneficios exclusivos</p>
+            </div>
+            <div class="user-status" id="userStatus" style="display: none;">
+                <div class="status-card">
+                    <div class="status-info">
+                        <h3 id="userName">Mi Perfil</h3>
+                        <div class="points-display">
+                            <span class="points" id="userPoints">0</span>
+                            <span class="points-label">Puntos</span>
+                        </div>
+                        <div class="level-info">
+                            <span class="level" id="userLevel">Nuevo</span>
+                            <span class="visits" id="userVisits">0 visitas</span>
+                        </div>
+                    </div>
+                    <div class="status-actions">
+                        <button class="btn btn-secondary" onclick="openModal('paymentModal')">
+                            <i class="fas fa-credit-card"></i>
+                            Registrar Pago
+                        </button>
+                        <button class="btn btn-primary" onclick="showRewards()">
+                            <i class="fas fa-gift"></i>
+                            Ver Recompensas
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rewards-info">
+                <div class="how-to-earn">
+                    <h3>¿Cómo ganar puntos?</h3>
+                    <div class="earn-methods">
+                        <div class="earn-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <div>
+                                <h4>Asistir a tu cita</h4>
+                                <p>+50 puntos por cada visita</p>
+                            </div>
+                        </div>
+                        <div class="earn-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Llegar puntual</h4>
+                                <p>+10 puntos extra</p>
+                            </div>
+                        </div>
+                        <div class="earn-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Referir un amigo</h4>
+                                <p>+100 puntos</p>
+                            </div>
+                        </div>
+                        <div class="earn-item">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <h4>Dejar una reseña</h4>
+                                <p>+25 puntos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="loyalty-levels">
+                    <h3>Niveles de Fidelidad</h3>
+                    <div class="levels-grid">
+                        <div class="level-card">
+                            <i class="fas fa-heart"></i>
+                            <h4>Nuevo</h4>
+                            <p>0-4 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-medal"></i>
+                            <h4>Bronce</h4>
+                            <p>5-9 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-trophy"></i>
+                            <h4>Plata</h4>
+                            <p>10-14 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-crown"></i>
+                            <h4>Oro</h4>
+                            <p>15-19 visitas</p>
+                        </div>
+                        <div class="level-card">
+                            <i class="fas fa-gem"></i>
+                            <h4>Diamante</h4>
+                            <p>20+ visitas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="available-rewards" id="availableRewards" style="display: none;">
+                <h3>Recompensas Disponibles</h3>
+                <div class="rewards-grid" id="rewardsGrid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contacto</h2>
+                <p>Estamos aquí para atenderte</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Dirección</h4>
+                            <p>Catamarca 2454, Villa María<br>Córdoba, Argentina</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Teléfono</h4>
+                            <p>+54 9 3534 08-8678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <a href="https://wa.me/5493534088678?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20servicios%20de%20uñas"><i class="fab fa-whatsapp"></i></a>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>+54 9 3534 08-8678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <a href="https://www.instagram.com/sbsofinails?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0nsaidNw==" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <div>
+                            <h4>Instagram</h4>
+                            <p>@sbsofinails</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="phone" placeholder="Tu teléfono">
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" rows="5" placeholder="Tu mensaje" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-hand-sparkles"></i>
+                        <span>Sbsofinails</span>
+                    </div>
+                    <p>El cuidado de tus uñas con la mejor calidad y atención personalizada.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/sbsofinails?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0nsaidNw=="><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/5493534088678?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20servicios%20de%20uñas"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="#servicios">Manicura Clásica</a></li>
+                        <li><a href="#servicios">Manicura con Gel</a></li>
+                        <li><a href="#servicios">Pedicura</a></li>
+                        <li><a href="#servicios">Uñas Acrílicas</a></li>
+                        <li><a href="#servicios">Nail Art</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#agendar">Agendar Cita</a></li>
+                        <li><a href="#recompensas">Recompensas</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Horarios</h4>
+                    <ul>
+                        <li>Lun - Vie: 9:00 - 19:00</li>
+                        <li>Sábados: 9:00 - 17:00</li>
+                        <li>Domingos: Cerrado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Service Gallery Modal -->
+    <div id="serviceGalleryModal" class="modal">
+        <div class="modal-content gallery-modal">
+            <div class="modal-header">
+                <h3 id="galleryServiceTitle">Galería - Semipermanente</h3>
+                <span class="close" onclick="closeModal('serviceGalleryModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="gallery-container">
+                    <div class="carousel-3d-container">
+                        <div class="carousel-3d" id="carousel3D">
+                            <!-- Las imágenes se generarán dinámicamente -->
+                        </div>
+                        <div class="carousel-navigation">
+                            <button class="carousel-nav-btn prev" onclick="previousImage()">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-nav-btn next" onclick="nextImage()">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="gallery-counter">
+                        <span id="currentImageNumber">1</span> / <span id="totalImages">5</span>
+                    </div>
+                    <div class="gallery-indicators" id="galleryIndicators">
+                        <!-- Los indicadores se generarán dinámicamente -->
+                    </div>
+                </div>
+                <div class="gallery-actions">
+                    <button class="btn btn-primary" onclick="bookServiceFromGallery()">
+                        <i class="fas fa-calendar-plus"></i>
+                        Agendar este Servicio
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeModal('serviceGalleryModal')">
+                        <i class="fas fa-times"></i>
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
