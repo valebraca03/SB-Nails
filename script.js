@@ -491,6 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const isRegister = document.getElementById('registerToggle').classList.contains('active');
             const isEditMode = loginForm.classList.contains('edit-mode');
+            const email = document.getElementById('loginEmail').value.trim();
             const phone = document.getElementById('loginPhone').value.trim();
             const password = document.getElementById('loginPassword').value;
             
@@ -505,6 +506,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     const confirmPassword = document.getElementById('confirmPassword').value;
                     const acceptTerms = document.getElementById('acceptTerms').checked;
                     const birthday = document.getElementById('loginBirthday').value;
+                    
+                    if (!email) {
+                        alert('El correo es obligatorio');
+                        return;
+                    }
                     
                     if (password !== confirmPassword) {
                         alert('Las contraseñas no coinciden');
@@ -526,14 +532,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     
-                    const userExists = await checkUserExists(phone);
+                    const userExists = await checkUserExists(email);
                     if (userExists) {
-                        alert('Ya existe una cuenta con este número de teléfono');
+                        alert('Ya existe una cuenta con este correo electrónico');
                         return;
                     }
                     
                     const registerResult = await registerUser({
                         name: name,
+                        email: email,
                         phone: phone,
                         password: password,
                         birthday: birthday
@@ -551,7 +558,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Función de editar perfil - próximamente disponible');
                     
                 } else {
-                    const loginResult = await loginUser(phone, password);
+                    if (!email) {
+                        alert('El correo es obligatorio');
+                        return;
+                    }
+                    const loginResult = await loginUser(email, password);
                     
                     if (loginResult.success) {
                         saveUserSession(loginResult.user);
@@ -1145,13 +1156,9 @@ async function registerUser(userData) {
             setDoc
         } = await import('./firebaseConfig.js');
 
-        const normalizedPhone = userData.phone.replace(/\s/g, '');
-        const baseIdentifier = normalizedPhone || userData.phone;
-        const syntheticEmail = `${baseIdentifier}@sbsofinails.local`;
-
         const credential = await createUserWithEmailAndPassword(
             auth,
-            syntheticEmail,
+            userData.email,
             userData.password
         );
 
@@ -1160,6 +1167,7 @@ async function registerUser(userData) {
         const userDocRef = doc(db, 'users', uid);
         await setDoc(userDocRef, {
             uid: uid,
+            Email: userData.email,
             Numero: userData.phone,
             NombreCompleto: userData.name,
             FechaCumpleanos: userData.birthday || 'none',
@@ -1172,6 +1180,7 @@ async function registerUser(userData) {
             success: true,
             user: {
                 uid: uid,
+                Email: userData.email,
                 Numero: userData.phone,
                 NombreCompleto: userData.name,
                 FechaCumpleanos: userData.birthday || 'none',
@@ -1183,7 +1192,7 @@ async function registerUser(userData) {
         console.error('Error en registerUser:', error);
         let message = 'Error al registrar.';
         if (error && error.code === 'auth/email-already-in-use') {
-            message = 'Ya existe una cuenta con este teléfono.';
+            message = 'Ya existe una cuenta con este correo electrónico.';
         }
         return {
             success: false,
@@ -1192,9 +1201,9 @@ async function registerUser(userData) {
     }
 }
 
-async function loginUser(phone, password) {
+async function loginUser(email, password) {
     try {
-        console.log('Login Firebase para teléfono:', phone);
+        console.log('Login Firebase para email:', email);
         const {
             auth,
             db,
@@ -1203,13 +1212,9 @@ async function loginUser(phone, password) {
             getDoc
         } = await import('./firebaseConfig.js');
 
-        const normalizedPhone = phone.replace(/\s/g, '');
-        const baseIdentifier = normalizedPhone || phone;
-        const syntheticEmail = `${baseIdentifier}@sbsofinails.local`;
-
         const credential = await signInWithEmailAndPassword(
             auth,
-            syntheticEmail,
+            email,
             password
         );
 
@@ -1223,7 +1228,8 @@ async function loginUser(phone, password) {
             const data = snapshot.data();
             userData = {
                 uid: uid,
-                Numero: data.Numero || phone,
+                Email: data.Email || email,
+                Numero: data.Numero || '',
                 NombreCompleto: data.NombreCompleto || 'Usuario',
                 FechaCumpleanos: data.FechaCumpleanos || 'none',
                 Puntos: data.Puntos || 0,
@@ -1232,7 +1238,8 @@ async function loginUser(phone, password) {
         } else {
             userData = {
                 uid: uid,
-                Numero: phone,
+                Email: email,
+                Numero: '',
                 NombreCompleto: 'Usuario',
                 FechaCumpleanos: 'none',
                 Puntos: 0,
@@ -1254,7 +1261,7 @@ async function loginUser(phone, password) {
         console.error('Error en loginUser:', error);
         let message = 'Error al iniciar sesión.';
         if (error && error.code === 'auth/invalid-credential') {
-            message = 'Teléfono o contraseña incorrectos.';
+            message = 'Correo o contraseña incorrectos.';
         }
         return {
             success: false,
