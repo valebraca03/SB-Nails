@@ -1202,16 +1202,16 @@ async function registerUser(userData) {
 }
 
 async function loginUser(email, password) {
-    try {
-        console.log('Login Firebase para email:', email);
-        const {
-            auth,
-            db,
-            signInWithEmailAndPassword,
-            doc,
-            getDoc
-        } = await import('./firebaseConfig.js');
+    console.log('Login Firebase para email:', email);
+    const {
+        auth,
+        db,
+        signInWithEmailAndPassword,
+        doc,
+        getDoc
+    } = await import('./firebaseConfig.js');
 
+    try {
         const credential = await signInWithEmailAndPassword(
             auth,
             email,
@@ -1219,32 +1219,35 @@ async function loginUser(email, password) {
         );
 
         const uid = credential.user.uid;
-        const userDocRef = doc(db, 'users', uid);
-        const snapshot = await getDoc(userDocRef);
 
-        let userData;
+        let userData = {
+            uid: uid,
+            Email: email,
+            Numero: '',
+            NombreCompleto: credential.user.displayName || 'Usuario',
+            FechaCumpleanos: 'none',
+            Puntos: 0,
+            Visitas: 0
+        };
 
-        if (snapshot.exists()) {
-            const data = snapshot.data();
-            userData = {
-                uid: uid,
-                Email: data.Email || email,
-                Numero: data.Numero || '',
-                NombreCompleto: data.NombreCompleto || 'Usuario',
-                FechaCumpleanos: data.FechaCumpleanos || 'none',
-                Puntos: data.Puntos || 0,
-                Visitas: data.Visitas || 0
-            };
-        } else {
-            userData = {
-                uid: uid,
-                Email: email,
-                Numero: '',
-                NombreCompleto: 'Usuario',
-                FechaCumpleanos: 'none',
-                Puntos: 0,
-                Visitas: 0
-            };
+        try {
+            const userDocRef = doc(db, 'users', uid);
+            const snapshot = await getDoc(userDocRef);
+
+            if (snapshot.exists()) {
+                const data = snapshot.data();
+                userData = {
+                    uid: uid,
+                    Email: data.Email || email,
+                    Numero: data.Numero || '',
+                    NombreCompleto: data.NombreCompleto || userData.NombreCompleto,
+                    FechaCumpleanos: data.FechaCumpleanos || userData.FechaCumpleanos,
+                    Puntos: data.Puntos || 0,
+                    Visitas: data.Visitas || 0
+                };
+            }
+        } catch (firestoreError) {
+            console.error('Error al leer Firestore en loginUser (se continúa con datos básicos):', firestoreError);
         }
 
         return {
