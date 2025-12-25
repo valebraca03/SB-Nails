@@ -1513,12 +1513,7 @@ async function openAdminPanel() {
         alert('Acceso restringido solo para la dueña.');
         return;
     }
-    openModal('adminModal');
-    await Promise.all([
-        loadAdminAppointments(),
-        loadAdminUsers(),
-        refreshBlockedDatesFromFirestore()
-    ]);
+    window.location.href = 'admin.html';
 }
 
 async function loadAdminAppointments() {
