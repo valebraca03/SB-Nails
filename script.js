@@ -641,38 +641,6 @@ async function loginWithGoogle() {
             Visitas: 0
         };
 
-        try {
-            const userDocRef = doc(db, 'users', uid);
-            const snapshot = await getDoc(userDocRef);
-
-            if (snapshot.exists()) {
-                const data = snapshot.data();
-                userData = {
-                    uid: uid,
-                    Email: data.Email || userData.Email,
-                    Numero: data.Numero || '',
-                    NombreCompleto: data.NombreCompleto || userData.NombreCompleto,
-                    FechaCumpleanos: data.FechaCumpleanos || userData.FechaCumpleanos,
-                    Puntos: data.Puntos || 0,
-                    Visitas: data.Visitas || 0
-                };
-            } else {
-                const userDocRefNew = doc(db, 'users', uid);
-                await setDoc(userDocRefNew, {
-                    uid: uid,
-                    Email: userData.Email,
-                    Numero: userData.Numero,
-                    NombreCompleto: userData.NombreCompleto,
-                    FechaCumpleanos: userData.FechaCumpleanos,
-                    Puntos: userData.Puntos,
-                    Visitas: userData.Visitas,
-                    CreadoEn: new Date().toISOString()
-                });
-            }
-        } catch (firestoreError) {
-            console.error('Error al sincronizar datos de Google con Firestore:', firestoreError);
-        }
-
         const sessionUser = {
             "Numero": userData.Numero,
             "Nombre Completo": userData.NombreCompleto,
@@ -691,6 +659,58 @@ async function loginWithGoogle() {
 
         closeModal('loginModal');
         alert(`¡Bienvenida de vuelta, ${sessionUser["Nombre Completo"]}!`);
+
+        (async () => {
+            try {
+                const userDocRef = doc(db, 'users', uid);
+                const snapshot = await getDoc(userDocRef);
+
+                let syncedData = userData;
+
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    syncedData = {
+                        uid: uid,
+                        Email: data.Email || syncedData.Email,
+                        Numero: data.Numero || '',
+                        NombreCompleto: data.NombreCompleto || syncedData.NombreCompleto,
+                        FechaCumpleanos: data.FechaCumpleanos || syncedData.FechaCumpleanos,
+                        Puntos: data.Puntos || 0,
+                        Visitas: data.Visitas || 0
+                    };
+                } else {
+                    const userDocRefNew = doc(db, 'users', uid);
+                    await setDoc(userDocRefNew, {
+                        uid: uid,
+                        Email: syncedData.Email,
+                        Numero: syncedData.Numero,
+                        NombreCompleto: syncedData.NombreCompleto,
+                        FechaCumpleanos: syncedData.FechaCumpleanos,
+                        Puntos: syncedData.Puntos,
+                        Visitas: syncedData.Visitas,
+                        CreadoEn: new Date().toISOString()
+                    });
+                }
+
+                const updatedSessionUser = {
+                    "Numero": syncedData.Numero,
+                    "Nombre Completo": syncedData.NombreCompleto,
+                    "Fecha de Cumpleaños": syncedData.FechaCumpleanos,
+                    "Puntos": syncedData.Puntos,
+                    "Visitas": syncedData.Visitas
+                };
+
+                saveUserSession(updatedSessionUser);
+                showUserDashboard(updatedSessionUser);
+
+                const updatedAccountLabel = document.querySelector('.btn-account-label');
+                if (updatedAccountLabel) {
+                    updatedAccountLabel.textContent = updatedSessionUser["Nombre Completo"].split(' ')[0];
+                }
+            } catch (firestoreError) {
+                console.error('Error al sincronizar datos de Google con Firestore:', firestoreError);
+            }
+        })();
     } catch (error) {
         console.error('Error en loginWithGoogle:', error);
         alert('Error al iniciar sesión con Google.');
