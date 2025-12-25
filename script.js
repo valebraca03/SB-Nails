@@ -614,6 +614,89 @@ window.addEventListener('click', function(event) {
     }
 });
 
+async function loginWithGoogle() {
+    try {
+        const {
+            auth,
+            db,
+            GoogleAuthProvider,
+            signInWithPopup,
+            doc,
+            getDoc,
+            setDoc
+        } = await import('./firebaseConfig.js');
+
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const uid = user.uid;
+
+        let userData = {
+            uid: uid,
+            Email: user.email || '',
+            Numero: '',
+            NombreCompleto: user.displayName || 'Usuario',
+            FechaCumpleanos: 'none',
+            Puntos: 0,
+            Visitas: 0
+        };
+
+        try {
+            const userDocRef = doc(db, 'users', uid);
+            const snapshot = await getDoc(userDocRef);
+
+            if (snapshot.exists()) {
+                const data = snapshot.data();
+                userData = {
+                    uid: uid,
+                    Email: data.Email || userData.Email,
+                    Numero: data.Numero || '',
+                    NombreCompleto: data.NombreCompleto || userData.NombreCompleto,
+                    FechaCumpleanos: data.FechaCumpleanos || userData.FechaCumpleanos,
+                    Puntos: data.Puntos || 0,
+                    Visitas: data.Visitas || 0
+                };
+            } else {
+                const userDocRefNew = doc(db, 'users', uid);
+                await setDoc(userDocRefNew, {
+                    uid: uid,
+                    Email: userData.Email,
+                    Numero: userData.Numero,
+                    NombreCompleto: userData.NombreCompleto,
+                    FechaCumpleanos: userData.FechaCumpleanos,
+                    Puntos: userData.Puntos,
+                    Visitas: userData.Visitas,
+                    CreadoEn: new Date().toISOString()
+                });
+            }
+        } catch (firestoreError) {
+            console.error('Error al sincronizar datos de Google con Firestore:', firestoreError);
+        }
+
+        const sessionUser = {
+            "Numero": userData.Numero,
+            "Nombre Completo": userData.NombreCompleto,
+            "Fecha de Cumpleaños": userData.FechaCumpleanos,
+            "Puntos": userData.Puntos,
+            "Visitas": userData.Visitas
+        };
+
+        saveUserSession(sessionUser);
+        showUserDashboard(sessionUser);
+
+        const accountLabel = document.querySelector('.btn-account-label');
+        if (accountLabel) {
+            accountLabel.textContent = sessionUser["Nombre Completo"].split(' ')[0];
+        }
+
+        closeModal('loginModal');
+        alert(`¡Bienvenida de vuelta, ${sessionUser["Nombre Completo"]}!`);
+    } catch (error) {
+        console.error('Error en loginWithGoogle:', error);
+        alert('Error al iniciar sesión con Google.');
+    }
+}
+
 
 // Datos de servicios con imágenes de ejemplo
 const servicesData = {
