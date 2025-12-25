@@ -1440,6 +1440,11 @@ function showUserDashboard(user) {
     if (accountLabel) {
         accountLabel.textContent = user["Nombre Completo"].split(' ')[0];
     }
+
+    const adminPanelBtn = document.getElementById('adminPanelBtn');
+    if (adminPanelBtn) {
+        adminPanelBtn.style.display = isCurrentUserAdmin() ? 'inline-flex' : 'none';
+    }
 }
 
 function logout() {

@@ -36,16 +36,6 @@
                             <span class="notification-dot"></span>
                         </div>
                     </button>
-                    <button class="btn-account" onclick="openAdminPanel()" id="adminButton">
-                        <div class="btn-account-content">
-                            <div class="btn-account-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="btn-account-text">
-                                <span class="btn-account-label">Admin</span>
-                            </div>
-                        </div>
-                    </button>
                 </div>
             </div>
         </nav>
@@ -249,6 +239,10 @@
                         <button class="btn btn-outline btn-small logout-btn" onclick="logout()">
                             <i class="fas fa-sign-out-alt"></i>
                             Cerrar Sesión
+                        </button>
+                        <button class="btn btn-outline btn-small" id="adminPanelBtn" style="display: none;" onclick="openAdminPanel()">
+                            <i class="fas fa-crown"></i>
+                            Panel Admin
                         </button>
                     </div>
                 </div>
