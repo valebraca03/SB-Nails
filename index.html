@@ -36,6 +36,16 @@
                             <span class="notification-dot"></span>
                         </div>
                     </button>
+                    <button class="btn-account" onclick="openAdminPanel()" id="adminButton">
+                        <div class="btn-account-content">
+                            <div class="btn-account-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="btn-account-text">
+                                <span class="btn-account-label">Admin</span>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
         </nav>
@@ -284,6 +294,90 @@
                         Registrar Pago
                     </button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Panel de Administración</h3>
+                <span class="close" onclick="closeModal('adminModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4>Gestión de Turnos</h4>
+                <div class="form-group">
+                    <label for="adminFilterDate">Filtrar por fecha</label>
+                    <input type="date" id="adminFilterDate" onchange="renderAdminAppointments()">
+                </div>
+                <div class="form-group">
+                    <label for="adminFilterService">Servicio</label>
+                    <select id="adminFilterService" onchange="renderAdminAppointments()">
+                        <option value="">Todos</option>
+                        <option value="semipermanente">Semipermanente</option>
+                        <option value="capping-gel">Capping Gel</option>
+                        <option value="soft-gel">Soft Gel</option>
+                        <option value="capping-polygel">Capping Polygel</option>
+                        <option value="retiro">Retiro</option>
+                        <option value="belleza-pies">Belleza de Pies</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="adminFilterStatus">Estado</label>
+                    <select id="adminFilterStatus" onchange="renderAdminAppointments()">
+                        <option value="">Todos</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="reprogramado">Reprogramado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Servicio</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminAppointmentsTableBody"></tbody>
+                </table>
+
+                <h4>Administración de Usuarios</h4>
+                <div class="form-group">
+                    <label for="adminUserSearch">Buscar usuario</label>
+                    <input type="text" id="adminUserSearch" placeholder="Nombre, email o teléfono" oninput="renderAdminUsers()">
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Puntos</th>
+                            <th>Visitas</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUsersTableBody"></tbody>
+                </table>
+
+                <h4>Calendario de Disponibilidad</h4>
+                <div class="form-group">
+                    <label for="adminBlockDate">Bloquear día</label>
+                    <input type="date" id="adminBlockDate">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" onclick="adminBlockDay()">Bloquear día</button>
+                    <button type="button" class="btn btn-outline" onclick="adminUnblockDay()">Desbloquear día</button>
+                </div>
+                <div class="form-group">
+                    <label>Días bloqueados</label>
+                    <ul id="adminBlockedDaysList"></ul>
+                </div>
             </div>
         </div>
     </div>
