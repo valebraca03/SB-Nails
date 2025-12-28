@@ -466,8 +466,7 @@ async function confirmModalAppointment() {
         console.error('Error al guardar la cita en Firestore:', error);
     }
 
-    showToast(`¡Cita confirmada! Te contactaremos por WhatsApp para confirmar los detalles.`, 'success', 5000);
-
+    // showToast(`¡Cita confirmada! Te contactaremos por WhatsApp para confirmar los detalles.`, 'success', 5000);
     closeModal('bookingModal');
 }
 
@@ -660,9 +659,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                     if (registerResult.success) {
-                        showToast('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success');
-                        showLoginForm();
-                        loginForm.reset();
+                        saveUserSession(registerResult.user);
+                        showUserDashboard(registerResult.user);
+                        closeModal('loginModal');
                     } else {
                         showToast(`Error al registrar: ${registerResult.error}`, 'error');
                     }
@@ -680,7 +679,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (loginResult.success) {
                         saveUserSession(loginResult.user);
                         showUserDashboard(loginResult.user);
-                        showToast(`¡Bienvenida de vuelta, ${loginResult.user["Nombre Completo"]}!`, 'success');
+                        closeModal('loginModal');
                     } else {
                         showToast(`Error al iniciar sesión: ${loginResult.error}`, 'error');
                     }
@@ -1701,7 +1700,6 @@ function logout() {
     }
 
     closeModal('loginModal');
-    showToast('Sesión cerrada exitosamente', 'info');
 }
 
 function isCurrentUserAdmin() {

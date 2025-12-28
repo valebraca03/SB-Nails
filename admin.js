@@ -283,12 +283,12 @@ async function adminMarkAppointmentDone(appointmentId) {
                         window.sendNotification(user.uid, "¡Premio Disponible!", "¡Felicidades! Has alcanzado los puntos para tu primera recompensa.");
                     }
                 }
-                alert(`Turno completado. Se sumaron 50 puntos y 1 visita a ${user.NombreCompleto}.`);
+                // alert(`Turno completado. Se sumaron 50 puntos y 1 visita a ${user.NombreCompleto}.`);
             } else {
-                alert('Turno completado. (Usuario no encontrado)');
+                // alert('Turno completado. (Usuario no encontrado)');
             }
         } else {
-            alert('Turno completado. (Cliente invitado, no suma puntos)');
+            // alert('Turno completado. (Cliente invitado, no suma puntos)');
         }
     } catch (error) {
         console.error("Error al completar turno:", error);
