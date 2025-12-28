@@ -591,7 +591,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentUser) {
         const accountLabel = document.querySelector('.btn-account-label');
         if (accountLabel) {
-            accountLabel.textContent = currentUser["Nombre Completo"].split(' ')[0];
+            const userName = currentUser.NombreCompleto || currentUser["Nombre Completo"] || "Mi Cuenta";
+            accountLabel.textContent = userName.split(' ')[0];
         }
         // Pre-cargar dashboard para que esté listo al abrir el modal
         showUserDashboard(currentUser);
@@ -1628,7 +1629,13 @@ function showUserDashboard(user) {
         if (el) el.style.display = 'none';
     });
 
-    document.getElementById('dashboardUserName').textContent = `¡Hola, ${user.NombreCompleto || 'Usuario'}!`;
+    const name = user.NombreCompleto || user["Nombre Completo"] || 'Usuario';
+    document.getElementById('dashboardUserName').textContent = `¡Hola, ${name}!`;
+
+    const accountLabel = document.querySelector('.btn-account-label');
+    if (accountLabel) {
+        accountLabel.textContent = name.split(' ')[0];
+    }
 
 
     const points = parseInt(user.Puntos) || 0;
@@ -1653,10 +1660,7 @@ function showUserDashboard(user) {
     document.getElementById('progressText').textContent =
         pointsNeeded > 0 ? `${pointsNeeded} puntos para el próximo nivel` : '¡Nivel máximo alcanzado!';
 
-    const accountLabel = document.querySelector('.btn-account-label');
-    if (accountLabel) {
-        accountLabel.textContent = (user.NombreCompleto || 'Usuario').split(' ')[0];
-    }
+
 
     const adminPanelBtn = document.getElementById('adminPanelBtn');
     if (adminPanelBtn) {
